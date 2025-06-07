@@ -20,6 +20,7 @@ base_url = 'https://saucedemo.com/'
 
 # Открытие страницы
 driver.get(base_url)
-
+# Время, в течение которого сайт будет открыт
+time.sleep(5)
 # Закрытие текущего окна браузера
 driver.close()
