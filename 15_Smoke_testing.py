@@ -3,108 +3,114 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
+#Функция для входа в систему
+def login(driver, username, password):
+    driver.find_element(By.XPATH, "//input[@placeholder='Username']").send_keys(username)
+    driver.find_element(By.XPATH, "//input[@placeholder='Password']").send_keys(password)
+    driver.find_element(By.XPATH, "//input[@id='login-button']").click()
+# Функция для получения информации о продукте
+def get_product_info(driver, product_xpath, price_xpath):
+    product_name = driver.find_element(By.XPATH, product_xpath).text
+    product_price = driver.find_element(By.XPATH, price_xpath).text
+    print(f"Product: {product_name}, Price: {product_price}")
+    return product_name, product_price
 
-# Функция для получение информации о продукте
-def get_product_info(driver, product_xpath):
-    return driver.find_element(By.XPATH, product_xpath).text
+# Функция для заполнения формы оформления заказа
+def fill_checkout_form(driver, first_name, last_name, postal_code):
+    driver.find_element(By.XPATH, '//input[@id="first-name"]').send_keys(first_name)
+    print("Input First Name")
+    driver.find_element(By.XPATH, '//input[@id="last-name"]').send_keys(last_name)
+    print("Input Last Name")
+    driver.find_element(By.XPATH, '//input[@id="postal-code"]').send_keys(postal_code)
+    print("Input Postal Code")
+    driver.find_element(By.XPATH, '//input[@id="continue"]').click()
+    print("Clicked Continue")
 
 # Настройка опций Chrome
 options = webdriver.ChromeOptions()
-options.add_experimental_option("detach", True)  # Эта опция предотвращает
-# автоматическое закрытие браузера после завершения скрипта
+options.add_experimental_option("detach", True)
 
 # Создание экземпляра драйвера
 driver = webdriver.Chrome(
     options=options,
     service=ChromeService(ChromeDriverManager().install())
 )
+
 # Основной URL
-base_url = 'https://saucedemo.com/'
+base_url = 'https://www.saucedemo.com/'
 
 # Открытие страницы
 driver.get(base_url)
 
-# Находим поле ввода имени пользователя с помощью XPath и вводим логин
-driver.find_element(By.XPATH, "//input[@placeholder='Username']").send_keys("standard_user")
+# Вход в систему
+login(driver, "standard_user", "secret_sauce")
 
-# Находим поле ввода пароля с помощью XPath и вводим значение
-driver.find_element(By.XPATH, "//input[@placeholder='Password']").send_keys("secret_sauce")
-
-# Находим кнопку входа на странице с помощью XPath и кликаем
-driver.find_element(By.XPATH, "//input[@id='login-button']").click()
-
-# Находим первый продукт по XPath и получаем его название
-value_product_1 = get_product_info(driver, '//*[@id="item_4_title_link"]')
-print(value_product_1)
-# Находим цену первого продукта по XPath и выводим её
-value_price_product_1 = get_product_info(driver, '//*[@id="inventory_container"]/div/div[1]/div[2]/div[2]/div')
-print(value_price_product_1)
-# Находим кнопку добавления первого продукта в корзину и кликаем по ней
-select_product_1 = driver.find_element(By.XPATH, '//*[@id="add-to-cart-sauce-labs-backpack"]')
-select_product_1.click()
+# Получаем информацию о первом продукте и добавляем его в корзину
+product_1_info = get_product_info(
+    driver,
+    '//*[@id="item_4_title_link"]',
+    '//*[@id="inventory_container"]/div/div[1]/div[2]/div[2]/div'
+)
+product_1, price_product_1 = product_1_info
+driver.find_element(By.XPATH, '//*[@id="add-to-cart-sauce-labs-backpack"]').click()
 print('Select Product_1')
-# Находим второй продукт по XPath и получаем его название
-value_product_2 = get_product_info(driver, '//*[@id="item_0_title_link"]/div')
-print(value_product_2)
-# Находим цену второго продукта по XPath и выводим её
-value_price_product_2 = get_product_info(driver, '//*[@id="inventory_container"]/div/div[2]/div[2]/div[2]/div')
-print(value_price_product_2)
-# Находим кнопку добавления второго продукта в корзину и кликаем по ней
+
+# Получаем информацию о втором продукте и добавляем его в корзину
+product_2_info = get_product_info(
+    driver,
+    '//*[@id="item_0_title_link"]/div',
+    '//*[@id="inventory_container"]/div/div[2]/div[2]/div[2]/div'
+)
+product_2, price_product_2 = product_2_info
 driver.find_element(By.XPATH, '//*[@id="add-to-cart-sauce-labs-bike-light"]').click()
 print("Select Product 2")
-# Находим иконку корзины и кликаем по ней
+
+# Переход в корзину и оформление заказа
 driver.find_element(By.XPATH, '//a[@class="shopping_cart_link"]').click()
 print("Click Cart")
-# Находим кнопку оформления заказа и кликаем по ней
 driver.find_element(By.XPATH, '//*[@id="checkout"]').click()
 print("Click Checkout")
-# Находим поле для ввода имени и вводим значение "Ivan"
-driver.find_element(By.XPATH, '//input[@id="first-name"]').send_keys("Ivan")
-print("Input First Name")
-# Находим поле для ввода фамилии и вводим значение "Ivanov"
-driver.find_element(By.XPATH, '//input[@id="last-name"]').send_keys("Ivanov")
-print("Input Last Name")
-# Находим поле для ввода почтового индекса и вводим значение "12345"
-driver.find_element(By.XPATH, '//input[@id="postal-code"]').send_keys("12345")
-print("Input Postal Code")
-# Находим кнопку продолжения и кликаем по ней
-driver.find_element(By.XPATH, '//input[@id="continue"]').click()
-print("Click Button Continue")
-# Находим название первого продукта на странице оформления заказа и проверяем его соответствие
-value_finish_product_1 = get_product_info(driver, '//a[@id="item_4_title_link"]')
-print(value_finish_product_1)
-assert value_product_1 == value_finish_product_1
-print("Finish Product 1 Good")
-# Находим цену первого продукта на странице оформления заказа и проверяем её соответствие
-value_price_finish_product_1 = get_product_info(driver,
-                                                '//*[@id="checkout_summary_container"]/div/div[1]/div[3]/div[2]/div[2]/div')
-print(value_price_finish_product_1)
-assert value_price_product_1 == value_price_finish_product_1
+
+# Заполнение формы заказа
+fill_checkout_form(driver, "Ivan", "Ivanov", "12345")
+
+# Проверка информации о первом продукте в заказе
+finish_product_1_info = get_product_info(
+    driver,
+    '//a[@id="item_4_title_link"]',
+    '//*[@id="checkout_summary_container"]/div/div[1]/div[3]/div[2]/div[2]/div'
+)
+finish_product_1, price_finish_product_1 = finish_product_1_info
+assert product_1 == finish_product_1
+print("Info Finish Product 1 Good")
+assert price_product_1 == price_finish_product_1
 print("Info Price Finish Product 1 Good")
-# Находим название второго продукта на странице оформления заказа и проверяем его соответствие
-value_finish_product_2 = get_product_info(driver, '//*[@id="item_0_title_link"]/div')
-print(value_finish_product_2)
-assert value_product_2 == value_finish_product_2
+
+# Проверка информации о втором продукте в заказе
+finish_product_2_info = get_product_info(
+    driver,
+    '//*[@id="item_0_title_link"]/div',
+    '//*[@id="checkout_summary_container"]/div/div[1]/div[4]/div[2]/div[2]/div'
+)
+finish_product_2, price_finish_product_2 = finish_product_2_info
+assert product_2 == finish_product_2
 print("Finish Product 2 Good")
-# Находим цену второго продукта на странице оформления заказа и проверяем её соответствие
-value_price_finish_product_2 = get_product_info(driver,
-                                                '//*[@id="checkout_summary_container"]/div/div[1]/div[4]/div[2]/div[2]/div')
-print(value_price_finish_product_2)
-assert value_price_product_2 == value_price_finish_product_2
+assert price_product_2 == price_finish_product_2
 print("Info Price Finish Product 2 Good")
-# Находим общую сумму заказа и проверяем её соответствие сумме цен продуктов
-value_summary_price = get_product_info(driver, '//*[@id="checkout_summary_container"]/div/div[2]/div[6]')
-print(value_summary_price)
-price_1 = float(value_price_product_1.replace("$", ""))
-price_2 = float(value_price_product_2.replace("$", ""))
+
+# Проверка общей суммы заказа
+summary_price_text = driver.find_element(By.XPATH, '//*[@id="checkout_summary_container"]/div/div[2]/div[6]').text
+print(summary_price_text)
+price_1 = float(price_product_1.replace("$", ""))
+price_2 = float(price_product_2.replace("$", ""))
 item_total = "Item total: " + "$" + str(price_1 + price_2)
-assert value_summary_price == item_total
+assert summary_price_text == item_total, "Summary price mismatch"
 print("Summary Price Good")
-# Находим кнопку завершения заказа и кликаем по ней
+
+# Завершение заказа
 driver.find_element(By.XPATH, '//*[@id="finish"]').click()
 print("Click Finish")
-# Находим сообщение о завершении заказа и проверяем его соответствие ожидаемому тексту
 value_checkout_complete = driver.find_element(By.XPATH, '//*[@id="checkout_complete_container"]/h2').text
 print(value_checkout_complete)
-assert value_checkout_complete == "Thank you for your order!"
+assert value_checkout_complete == "Thank you for your order!", "Order completion message mismatch"
 print("Info Order Complete Good")
