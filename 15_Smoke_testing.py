@@ -3,7 +3,8 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 
-#Функция для входа в систему
+
+# Функция для входа в систему
 def login(driver, username, password):
     driver.find_element(By.XPATH, "//input[@placeholder='Username']").send_keys(username)
     driver.find_element(By.XPATH, "//input[@placeholder='Password']").send_keys(password)
@@ -29,6 +30,7 @@ def fill_checkout_form(driver, first_name, last_name, postal_code):
     print("Input Postal Code")
     driver.find_element(By.XPATH, '//input[@id="continue"]').click()
     print("Click Button Continue")
+
 
 # Настройка опций Chrome
 options = webdriver.ChromeOptions()
