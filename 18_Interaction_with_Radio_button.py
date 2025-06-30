@@ -29,3 +29,7 @@ radio_button.click()
 value_radio_button = driver.find_element(By.XPATH, '//*[@id="radio-group-react"]/div/div[1]/div/span[2]/div/div/span/span/div/div[5]/label/input')
 assert value_radio_button.is_selected(), "Radio Button Последний is NOT selected"
 print(f"Radio Button {radio_button.text} is selected")
+time.sleep(2)
+#Завершение работы браузера
+driver.quit()
+print("The Chrome browser is closed")
