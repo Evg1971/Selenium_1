@@ -31,15 +31,18 @@ driver.get(base_url)
 # Поиск элемента выпадающего списка по XPath и клик по нему
 click_drop = driver.find_element(By.XPATH, '//span[@aria-labelledby="select2-country-container"]')
 click_drop.click()
+print("Click to Select Country")
 
-time.sleep(3) # Пауза в 3 секунды
+time.sleep(2) # Пауза в 2 секунды
 
-# Поиск поля ввода для страны по XPath
-input_country = driver.find_element(By.XPATH, '(//input[@class="select2-search__field"])[2]')
-# Ввод текста "India" в поле ввода
-input_country.send_keys("India")
+# Поиск  по XPath страны и клик
+select_country = driver.find_element(By.XPATH, '(//li[@class="select2-results__option"])[5]')
+select_country.click()
+#Вывод информации о выборе
+print("Select India")
 
-time.sleep(3)
+time.sleep(2)
 
-# Имитация нажатия клавиши RETURN (Enter) для выбора страны
-input_country.send_keys(Keys.RETURN)
+#Завершение работы браузера
+driver.quit()
+print("The Chrome browser is closed")
