@@ -37,43 +37,61 @@ driver.switch_to.frame(iframe)
 input_pole = driver.find_element(By.XPATH, '//*[@id="__next"]/div/div[2]')
 # Выделение всего текста в поле ввода
 input_pole.send_keys(Keys.CONTROL + 'a')
-
+# Пауза для ожидания выполнения действий
 time.sleep(2)
-
 # Удаление выделенного текста
 input_pole.send_keys(Keys.DELETE)
-
+# Пауза для ожидания выполнения действий
 time.sleep(2)
-
 # Ввод нового текста в поле
 input_pole.send_keys('Interaction with IFrame')
-
-# Получение текста из поля ввода
-value_input_pole = input_pole.text
-# Вывод текста из поля ввода в консоль
-print(value_input_pole)
-
-time.sleep(2)
-
 # Выделение всего текста в поле ввода
 input_pole.send_keys(Keys.CONTROL + 'a')
 
-# Поиск кнопки курсива на панели редактирования по XPath и клик по ней
-click_editing_panel_italic = driver.find_element(By.XPATH, '//*[@id="__next"]/div/div[1]/button[2]')
-click_editing_panel_italic.click()
-print("Click Editing Panel Italic")
+# Поиск кнопки Bold на панели редактирования по XPath и клик по ней
+click_editing_panel_bold = driver.find_element(By.XPATH, '//button[@title="Bold"]')
+click_editing_panel_bold.click()
+print("Click editing panel Bold")
 
-# Поиск поля ввода после применения курсива по XPath
-new_input_pole = driver.find_element(By.XPATH, '//*[@id="__next"]/div/div[2]/i')
-# Получение текста из поля ввода после применения курсива
-value_new_input_pole = new_input_pole.text
-# Вывод текста из поля ввода после применения курсива в консоль
-print(value_new_input_pole)
+# Поиск кнопки Underline на панели редактирования по XPath и клик по ней
+click_editing_panel_underline = driver.find_element(By.XPATH, '//button[@title="Underline"]')
+click_editing_panel_underline.click()
+print("Click editing panel UnderLine")
 
-# Проверка, что текст остался тем же после применения курсива
-assert value_input_pole == value_new_input_pole, "Editing NOT GOOD"
+# Поиск поля ввода после применения стилей по XPath
+new_input_pole = driver.find_element(By.XPATH, '//*[@id="__next"]/div/div[2]/b/u')
+# Получение текста из поля ввода
+value_input_pole = new_input_pole.text
+# Вывод текста из поля ввода в консоль
+print(value_input_pole)
+# Пауза для ожидания выполнения действий
+time.sleep(2)
+
+# Клик по кнопке Bold на панели редактирования
+click_editing_panel_bold.click()
+print("Click editing panel Bold")
+
+# Клик по кнопке Underline на панели редактирования
+click_editing_panel_underline.click()
+print("Click editing panel UnderLine")
+
+# Поиск кнопки Italic на панели редактирования по XPath и клик по ней
+driver.find_element(By.XPATH, '//button[@title="Italic"]').click()
+print("Click editing panel Italic")
+
+# Поиск кнопки Strike на панели редактирования по XPath и клик по ней
+driver.find_element(By.XPATH, '//button[@title="Strike through"]').click()
+print("Click editing panel Strike through")
+
+# Поиск поля ввода после применения новых стилей по XPath
+new_input_pole_2 = driver.find_element(By.XPATH, '//*[@id="__next"]/div/div[2]/i/strike')
+value_input_pole_2 = new_input_pole_2.text
+
+# Проверка, что текст остался тем же после применения стилей
+assert value_input_pole == value_input_pole_2, "Editing NOT GOOD"
 print("Editing Good")
 
+# Пауза для ожидания выполнения действий перед закрытием браузера
 time.sleep(2)
 
 # Завершение работы браузера
