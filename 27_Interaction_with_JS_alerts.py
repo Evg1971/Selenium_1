@@ -7,6 +7,12 @@ from selenium.webdriver.chrome.service import Service as ChromeService  # Для
 from selenium.webdriver.common.by import By  # Для поиска элементов на странице
 from webdriver_manager.chrome import ChromeDriverManager  # Для автоматического управления драйвером Chrome
 
+#Функция для проверки результата
+def check_result(name, expected_result, message):
+    value_result = driver.find_element(By.XPATH, '//p[@id="result"]').text
+    assert expected_result == value_result, message
+    print(f"Click Button {name} Good")
+
 # Настройка опций Chrome
 options = webdriver.ChromeOptions()  # Создание объекта опций для Chrome
 options.add_experimental_option("detach", True)  # Эта опция предотвращает автоматическое закрытие браузера после завершения скрипта
@@ -32,10 +38,7 @@ time.sleep(2)
 driver.switch_to.alert.accept()
 
 # Проверка результата после нажатия на JS Alert
-result_alert = "You successfully clicked an alert"
-value_result_alert = driver.find_element(By.XPATH, '//p[@id="result"]').text
-assert result_alert == value_result_alert, "Incorrect clicked an alert"
-print("Click Button JS Alert Good")
+check_result("JS Alert", "You successfully clicked an alert", "Incorrect clicked an alert")
 
 # Нажатие на кнопку для вызова JS Confirm
 driver.find_element(By.XPATH, '//button[@onclick="jsConfirm()"]').click()
@@ -46,10 +49,7 @@ time.sleep(2)
 driver.switch_to.alert.dismiss()
 
 # Проверка результата после нажатия на JS Confirm
-result_confirm_cancel = "You clicked: Cancel"
-value_result_confirm_cancel = driver.find_element(By.XPATH, '//p[@id="result"]').text
-assert result_confirm_cancel == value_result_confirm_cancel, "Incorrect clicked a confirm"
-print("Click Button JS Confirm Good")
+check_result("JS Confirm","You clicked: Cancel", "Incorrect clicked a confirm")
 
 # Нажатие на кнопку для вызова JS Prompt
 driver.find_element(By.XPATH, '//button[@onclick="jsPrompt()"]').click()
@@ -62,10 +62,7 @@ time.sleep(2)
 driver.switch_to.alert.accept()
 
 # Проверка результата после нажатия на JS Prompt
-result_prompt = "You entered: JS_Prompt"
-value_prompt = driver.find_element(By.XPATH, '//p[@id="result"]').text
-assert result_prompt == value_prompt, "Incorrect click button JS Prompt"
-print("Click Button JS Prompt Good")
+check_result("JS Prompt","You entered: JS_Prompt", "Incorrect click button JS Prompt")
 
 # Завершение работы браузера и вывод сообщения об этом
 driver.quit()
